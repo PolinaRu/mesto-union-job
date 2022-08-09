@@ -1,7 +1,7 @@
 .footer__copyright {
   color: #545454;
   font-size: 18px;
-  margin-top: 47px;
+  margin-top: 66px;
   margin-bottom: 60px;
 }
 
@@ -9,6 +9,6 @@
   .footer__copyright {
     font-size: 14px;
     line-height: 17px;
-    margin: 32px 19px 30px 19px;
+    margin: 49px 19px 30px 19px;
   }
 }
