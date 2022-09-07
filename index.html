@@ -25,55 +25,60 @@
     </section>
     <section class="elements">
       <ul class="elements__list">
-        <li class="element">
-          <img class="element__image" alt="Карачаево" src="./images/element/kar-cherk.jpg">
-          <h2 class="element__title">Карачаевск</h2>
-          <button  type="button" class="element__button"></button>
-        </li>
-        <li class="element">
-          <img class="element__image" alt="Гора Эльбрус" src="./images/element/elbrus.jpg">
-          <h2 class="element__title">Гора Эльбрус</h2>
-          <button  type="button" class="element__button"></button>
-        </li>
-        <li class="element">
-          <img class="element__image" alt="Домбай" src="./images/element/dombay.jpg">
-          <h2 class="element__title">Домбай</h2>
-          <button  type="button" class="element__button"></button>
-        </li>
-        <li class="element">
-          <img class="element__image" alt="Гора Эльбрус" src="./images/element/elbrus.jpg">
-          <h2 class="element__title">Гора Эльбрус</h2>
-          <button  type="button" class="element__button"></button>
-        </li>
-        <li class="element">
-          <img class="element__image" alt="Домбай" src="./images/element/dombay.jpg">
-          <h2 class="element__title">Домбай</h2>
-          <button type="button" class="element__button"></button>
-        </li>
-        <li class="element">
-          <img class="element__image" alt="Карачаево" src="./images/element/kar-cherk.jpg">
-          <h2 class="element__title">Карачаево-Черкессия</h2>
-          <button  type="button" class="element__button"></button>
-        </li>
+  
       </ul>
     </section>
   </main>
   <footer class="footer">
     <p class="footer__copyright">&copy; 2022. GudLub</p>
   </footer>
-  <div class="popup">
+
+  <div class="popup popup-profile">
     <div class="popup__window">
       <h3 class="popup__name">Редактировать профиль</h3>
       <button  type="button" class="popup__button popup__button_making_exit"></button>
       <form  name="profileEdit" class="popup__container">
         <fieldset class="popup__title">
-          <input class="popup__input" type="text" name="profile__title" placeholder="Жак-Ив Кусто">
+          <input class="popup__input" type="text" name="profile__title" id="profile-title" placeholder="Жак-Ив Кусто">
         </fieldset>
         <fieldset class="popup__subtitle">
-          <input class="popup__input" type="text" name="profile__subtitle" placeholder="Исследователь океана">
+          <input class="popup__input" type="text" name="profile__subtitle" id="profile-subtitle" placeholder="Исследователь океана">
         </fieldset>
       </form>
-      <button  type="submit" class="popup__button popup__button_making_save">Сохранить</button>
+      <button  type="submit" class="popup__button popup__button_making_save popup__button_making_save_profile">Сохранить</button>
     </div>
   </div>
+  <div class="popup popup-element">
+    <div class="popup__window">
+      <h3 class="popup__name">Новое место</h3>
+      <button  type="button" class="popup__button popup__button_making_exit"></button>
+      <form  name="elementEdit" class="popup__container">
+        <fieldset class="popup__title">
+          <input class="popup__input" type="text" name="element__title" id="element-title" placeholder="Название">
+        </fieldset>
+        <fieldset class="popup__subtitle">
+          <input class="popup__input" type="text" name="element__link" id="element-link" placeholder="Ссылка на картинку">
+        </fieldset>
+      </form>
+      <button  type="submit" class="popup__button popup__button_making_save popup__button_making_save_image">Сохранить</button>
+    </div>
+  </div>
+  <div class="popup popup-image">
+    <div class="popup__window-image">
+      <button  type="button" class="popup__button popup__button_making_exit popup__button_making_exit-img"></button>
+      <figure class="popup__figure">
+        <img class="popup__image" src="" alt="">
+        <figcaption class="popup__subtitle popup__image-subtitle"></figcaption>
+      </figure>
+    </div>
+  </div>
+  <template id="elementTemplate">
+    <li class="element">
+      <img class="element__image popup__image" src="" alt="">
+      <button type="button" class="element__button element__button_remove"></button>
+      <h2 class="element__title"></h2> 
+      <button type="button" class="element__button element__button_like like"></button>
+    </li>
+  </template>
+  <script src="./pages/script.js"></script>
 </body>
