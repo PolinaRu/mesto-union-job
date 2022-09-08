@@ -30,20 +30,19 @@ const elementTitle = elements.querySelector('.element__title');
 const popupProfile = document.querySelector('.popup-profile');
 const buttonEdit = document.querySelector('.profile__button_making_edit');
 const buttonAdd = document.querySelector('.profile__button_making_add');
-const buttonExit = document.querySelectorAll('.popup__button_making_exit');
-const buttonSaveProfile = document.querySelector('.popup__button_making_save_profile');
-const buttonSaveImage = document.querySelector('.popup__button_making_save_image');
+const buttonsExit = document.querySelectorAll('.popup__button_making_exit');
 const profileTitle = document.querySelector('.profile__title');
 const profileSubtitle = document.querySelector('.profile__subtitle');
-const profileTitleNew = document.getElementById('profile-title');
-const profileSubtitleNew = document.getElementById('profile-subtitle');
+const profileTitleNew = document.querySelector('#profile-title');
+const profileSubtitleNew = document.querySelector('#profile-subtitle');
 const popupElement = document.querySelector('.popup-element');
 const popupElementContainer = popupElement.querySelector('.popup__container');
-const newElementTitle = document.getElementById('element-title');
-const newElementLink = document.getElementById('element-link');
+const newElementTitle = document.querySelector('#element-title');
+const newElementLink = document.querySelector('#element-link');
 const popupImage = document.querySelector('.popup-image');
 const imagePopupImage = popupImage.querySelector('.popup__image');
 const subtitlePopupImage = popupImage.querySelector('.popup__subtitle');
+const elementTemplate = document.querySelector('#elementTemplate').content;
 
 function openPopup(evt) {
   evt.classList.add('popup_opened');
@@ -51,12 +50,12 @@ function openPopup(evt) {
 function closePopup(evt) {
   evt.classList.remove('popup_opened');
 };
-function newProfile() {
+function openPopupPorfile() {
   profileTitleNew.value = profileTitle.textContent;
   profileSubtitleNew.value = profileSubtitle.textContent;
   openPopup(popupProfile);
 };
-buttonEdit.addEventListener('click', newProfile);
+buttonEdit.addEventListener('click', openPopupPorfile);
 function saveProfile(evt) {
   evt.preventDefault();
   if (profileTitleNew.value && profileSubtitleNew.value) {
@@ -66,11 +65,11 @@ function saveProfile(evt) {
   }
 };
 popupProfile.addEventListener('submit', saveProfile);
-buttonSaveProfile.addEventListener('click', saveProfile);
+
 buttonAdd.addEventListener('click', () => {
   openPopup(popupElement);
 });
-buttonExit.forEach((button) => {
+buttonsExit.forEach((button) => {
   const popup = button.closest('.popup');
   button.addEventListener('click', () => closePopup(popup));
 });
@@ -79,7 +78,6 @@ function addLike(evt) {
   evt.target.classList.toggle('like_active');
 };
 function createElement(element) {
-  const elementTemplate = document.querySelector('#elementTemplate').content;
   const newElement = elementTemplate.querySelector('.element').cloneNode(true);
   const elementImage = newElement.querySelector('.element__image');
   newElement.querySelector('.element__title').textContent = element.name;
@@ -100,7 +98,7 @@ function saveElement(evt) {
   evt.preventDefault();
   if (newElementTitle.value && newElementLink.value) {
     const element = {};
-    element['title'] = newElementTitle.value;
+    element['name'] = newElementTitle.value;
     element['link'] = newElementLink.value;
     newElement(element);
     closePopup(popupElement);
@@ -117,6 +115,6 @@ function openImage(src, alt) {
 };
 initialCards.forEach(newElement);
 popupElement.addEventListener('submit', saveElement);
-buttonSaveImage.addEventListener('click', saveElement);
+
 
 
