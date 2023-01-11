@@ -1,8 +1,8 @@
 import '../pages/index.css';
 import { createElement } from './card.js';
 import { openPopup, closePopup } from './modal.js';
-import { enableValidation } from './validate.js';
-import { set, initialCards, popupProfile, buttonEdit, buttonAdd, buttonsExit, profileTitle, profileSubtitle, profileTitleNew, profileSubtitleNew, popupElement, newElementTitle, newElementLink, popupImage, imagePopupImage, subtitlePopupImage, elements, popups } from './utils.js';
+import { enableValidation, blockSubmitButton } from './validate.js';
+import { set, initialCards, popupProfile, buttonEdit, buttonAdd, buttonsExit, profileTitle, profileSubtitle, profileTitleNew, profileSubtitleNew, popupElement, newElementTitle, newElementLink, popupImage, imagePopupImage, subtitlePopupImage, elements, popups, cardSubmitButton } from './utils.js';
 
 function getNewElement(element) {
   if (element) {
@@ -60,7 +60,10 @@ buttonEdit.addEventListener('click', openPopupPorfile);
 popupProfile.addEventListener('submit', saveProfile);
 
 buttonAdd.addEventListener('click', () => {
+  newElementTitle.value = "";
+  newElementLink.value = "";
   openPopup(popupElement);
+  blockSubmitButton(set, cardSubmitButton);
 });
 
 buttonsExit.forEach((button) => {

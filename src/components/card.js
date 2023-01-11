@@ -1,4 +1,4 @@
-import { newElementLink, newElementTitle, elementTemplate } from "./utils.js";
+import { elementTemplate } from "./utils.js";
 import { openImage } from "./index.js"
 
 function addLike(evt) {
@@ -6,8 +6,6 @@ function addLike(evt) {
     evt.target.classList.toggle('like_active');
 };
 function createElement(element) {
-   newElementTitle.value = "";
-   newElementLink.value = "";
    const newElement = elementTemplate.querySelector('.element').cloneNode(true);
    const elementImage = newElement.querySelector('.element__image');
    newElement.querySelector('.element__title').textContent = element.name;
