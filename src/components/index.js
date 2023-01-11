@@ -1,26 +1,20 @@
 import '../pages/index.css';
-import { addLike, getNewElement, removeElement } from './card.js';
+import { createElement } from './card.js';
 import { openPopup, closePopup } from './modal.js';
 import { enableValidation } from './validate.js';
-import { set, initialCards, popupProfile, buttonEdit, buttonAdd, buttonsExit, profileTitle, profileSubtitle, profileTitleNew, profileSubtitleNew, popupElement, newElementTitle, newElementLink, popupImage, imagePopupImage, subtitlePopupImage, elementTemplate, popups } from './utils.js';
+import { set, initialCards, popupProfile, buttonEdit, buttonAdd, buttonsExit, profileTitle, profileSubtitle, profileTitleNew, profileSubtitleNew, popupElement, newElementTitle, newElementLink, popupImage, imagePopupImage, subtitlePopupImage, elements, popups } from './utils.js';
 
+function getNewElement(element) {
+  if (element) {
+    const newElement = createElement(element);
+    elements.prepend(newElement);
+  }
+};
 function openImage(src, alt) {
   imagePopupImage.setAttribute('src', src);
   imagePopupImage.setAttribute('alt', alt);
   subtitlePopupImage.textContent = alt;
   openPopup(popupImage);
-};
-
-function createElement(element) {
-  const newElement = elementTemplate.querySelector('.element').cloneNode(true);
-  const elementImage = newElement.querySelector('.element__image');
-  newElement.querySelector('.element__title').textContent = element.name;
-  elementImage.src = element.link;
-  elementImage.alt = element.name;
-  newElement.querySelector('.like').addEventListener('click', addLike);
-  newElement.querySelector('.element__button_remove').addEventListener('click', removeElement);
-  elementImage.addEventListener('click', () => {openImage(element.link, element.name)});
-  return newElement;
 };
 
 function saveElement(evt) {
@@ -79,5 +73,5 @@ popupElement.addEventListener('submit', saveElement);
 
 enableValidation(set);
 
-export { createElement, closePopupByEsc };
+export { createElement, closePopupByEsc, openImage };
 

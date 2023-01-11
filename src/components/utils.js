@@ -52,5 +52,6 @@ const imagePopupImage = popupImage.querySelector('.popup__image');
 const subtitlePopupImage = popupImage.querySelector('.popup__subtitle');
 const elementTemplate = document.querySelector('#elementTemplate').content;
 const popups = document.querySelectorAll('.popup');
+const cardSubmitButton = document.querySelector('#submitButton');
 
-export { set, initialCards, elements, elementImage, elementTitle, popupProfile, buttonEdit, buttonAdd, buttonsExit, profileTitle, profileSubtitle, profileTitleNew, profileSubtitleNew, popupElement, popupElementContainer, newElementTitle, newElementLink, popupImage, imagePopupImage, subtitlePopupImage, elementTemplate, popups };
+export { set, initialCards, elements, elementImage, elementTitle, popupProfile, buttonEdit, buttonAdd, buttonsExit, profileTitle, profileSubtitle, profileTitleNew, profileSubtitleNew, popupElement, popupElementContainer, newElementTitle, newElementLink, popupImage, imagePopupImage, subtitlePopupImage, elementTemplate, popups, cardSubmitButton };

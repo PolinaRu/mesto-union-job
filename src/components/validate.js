@@ -67,5 +67,4 @@ const enableValidation = (set) => {
     });
 };
 
-
 export {showInputError, hideInputError, checkInputValidity, setEventListeners, hasInvalidInput, blockSubmitButton, toggleButtonState, enableValidation};
