@@ -1,19 +1,51 @@
 import '../pages/index.css';
-import { createElement } from './card.js';
+import { createElement, countLike } from './card.js';
 import { openPopup, closePopup } from './modal.js';
 import { enableValidation, blockSubmitButton } from './validate.js';
-import { set, initialCards, popupProfile, buttonEdit, buttonAdd, buttonsExit, profileTitle, profileSubtitle, profileTitleNew, profileSubtitleNew, popupElement, newElementTitle, newElementLink, popupImage, imagePopupImage, subtitlePopupImage, elements, popups, cardSubmitButton } from './utils.js';
+import { set, newElementId, buttonEditAvatar, profile, avatarLink, avatarForm, buttonAvatar, popupProfile, popupAvatar, buttonEdit, buttonAdd, buttonsExit, profileAvatar, profileTitle, profileSubtitle, profileTitleNew, profileSubtitleNew, popupElement, newElementTitle, newElementLink, popupImage, imagePopupImage, subtitlePopupImage, elements, popups, cardSubmitButton } from './utils.js';
+import { getInitialCards, getUser, editProfileAvatar, editProfile, postNewElement, deleteMyElement, putLike, unputLike } from './api.js';
 
-function getNewElement(element) {
-  if (element) {
-    const newElement = createElement(element);
-    elements.prepend(newElement);
-  }
-};
+Promise.all([getUser(), getInitialCards()])
+  .then(([user, cards]) => {
+    profile.id = user._id;
+    profileTitle.textContent = user.name;
+    profileSubtitle.textContent = user.about;
+    profileAvatar.src = user.avatar;
+    cards.forEach((card) => {
+      const hostCard = createElement(card, profile);
+      elements.append(hostCard);
+    });
+  })
+  .catch((err) => {
+    console.error(err);
+  });
+
+function editAvatar(evt) {
+  evt.preventDefault();
+  buttonAvatar.textContent = 'Сохранение...';
+  const avatarValue = avatarLink.value;
+  editProfileAvatar(avatarValue).then((user) => {
+    profileAvatar.src = user.avatar;
+    profileAvatar.alt = user.avatar;
+    closePopup(popupAvatar);
+  })
+    .catch((err) => {
+      console.error(err);
+    })
+    .finally(() => {
+      buttonAvatar.textContent = "Сохранить";
+    });
+}
+avatarForm.addEventListener('submit', editAvatar);
+
+buttonEditAvatar.addEventListener('click', function () {
+  openPopup(popupAvatar);
+  });
+
 function openImage(src, alt) {
-  imagePopupImage.setAttribute('src', src);
-  imagePopupImage.setAttribute('alt', alt);
-  subtitlePopupImage.textContent = alt;
+  imagePopupImage.src = src.src;
+  imagePopupImage.alt = alt.alt;
+  subtitlePopupImage.textContent = alt.textContent;
   openPopup(popupImage);
 };
 
@@ -23,7 +55,7 @@ function saveElement(evt) {
     const element = {};
     element['name'] = newElementTitle.value;
     element['link'] = newElementLink.value;
-    getNewElement(element);
+    postNewElement(element.name, element.link);
     closePopup(popupElement);
   }
 };
@@ -32,13 +64,71 @@ function openPopupPorfile() {
   profileSubtitleNew.value = profileSubtitle.textContent;
   openPopup(popupProfile);
 };
+
+
+function addNewElement(evt) {
+  evt.preventDefault();
+
+  cardSubmitButton.textContent = "Создание...";
+  postNewElement(imagePopupImage.value, subtitlePopupImage.value)
+    .then((element) => {
+      document.querySelector('#poupForm').reset();
+      elements.prepend(createElement(element, profile));
+      closePopup(newElementId);
+    })
+    .catch((err) => {
+      console.error(err);
+    })
+    .finally(() => {
+      cardSubmitButton.textContent = "Создать";
+    });
+};
+
+function addLike(element, card, profile) {
+  putLike(card._id)
+      .then((data) => {
+          countLike(element, data.likes, profile);
+      })
+      .catch((err) => {
+          console.error(err);
+      });
+}
+function removeLike(element, card, profile) {
+  unputLike(card._id)
+      .then((data) => {
+          countLike(element, data.likes, profile);
+      })
+      .catch((err) => {
+          console.error(err);
+      });
+}
+function deleteCard(element, card, profile) {
+  deleteMyElement(card._id)
+      .then((data) => {
+          countLike(element, data.likes, profile);
+      })
+      .catch((err) => {
+          console.error(err);
+      });
+}
+
 function saveProfile(evt) {
   evt.preventDefault();
-  if (profileTitleNew.value && profileSubtitleNew.value) {
-    profileTitle.textContent = profileTitleNew.value;
-    profileSubtitle.textContent = profileSubtitleNew.value;
-    closePopup(popupProfile);
-  }
+  buttonAdd.textContent = 'Сохранение...';
+  profileTitle.textContent = profileTitleNew.value;
+  profileSubtitle.textContent = profileSubtitleNew.value;
+  editProfile(profileTitleNew.value, profileSubtitleNew.value)
+    .then((res) => {
+      profileTitle.textContent = res.name;
+      profileSubtitle.textContent = res.about;
+      closePopup(popupProfile);
+    })
+    .catch((err) => {
+      console.error(err);
+    })
+    .finally(() => {
+      buttonAdd.textContent = "Сохранить";
+    });
 };
 
 function closePopupByEsc(evt) {
@@ -71,10 +161,9 @@ buttonsExit.forEach((button) => {
   button.addEventListener('click', () => closePopup(popup));
 });
 
-initialCards.forEach(getNewElement);
 popupElement.addEventListener('submit', saveElement);
 
 enableValidation(set);
 
-export { createElement, closePopupByEsc, openImage };
+export { createElement, deleteCard, closePopupByEsc, openImage, addLike, removeLike, addNewElement };
 
