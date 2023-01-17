@@ -1,9 +1,9 @@
 import '../pages/index.css';
-import { createElement, countLike } from './card.js';
+import { createElement } from './card.js';
 import { openPopup, closePopup } from './modal.js';
 import { enableValidation, blockSubmitButton } from './validate.js';
 import { set, newElementId, buttonEditAvatar, profile, avatarLink, avatarForm, buttonAvatar, popupProfile, popupAvatar, buttonEdit, buttonAdd, buttonsExit, profileAvatar, profileTitle, profileSubtitle, profileTitleNew, profileSubtitleNew, popupElement, newElementTitle, newElementLink, popupImage, imagePopupImage, subtitlePopupImage, elements, popups, cardSubmitButton } from './utils.js';
-import { getInitialCards, getUser, editProfileAvatar, editProfile, postNewElement, deleteMyElement, putLike, unputLike } from './api.js';
+import { getInitialCards, getUser, editProfileAvatar, editProfile, postNewElement } from './api.js';
 
 Promise.all([getUser(), getInitialCards()])
   .then(([user, cards]) => {
@@ -26,7 +26,6 @@ function editAvatar(evt) {
   const avatarValue = avatarLink.value;
   editProfileAvatar(avatarValue).then((user) => {
     profileAvatar.src = user.avatar;
-    profileAvatar.alt = user.avatar;
     closePopup(popupAvatar);
   })
     .catch((err) => {
@@ -40,6 +39,7 @@ avatarForm.addEventListener('submit', editAvatar);
 
 buttonEditAvatar.addEventListener('click', function () {
   openPopup(popupAvatar);
+  blockSubmitButton(set, cardSubmitButton);
   });
 
 function openImage(src, alt) {
@@ -49,31 +49,20 @@ function openImage(src, alt) {
   openPopup(popupImage);
 };
 
-function saveElement(evt) {
-  evt.preventDefault();
-  if (newElementTitle.value && newElementLink.value) {
-    const element = {};
-    element['name'] = newElementTitle.value;
-    element['link'] = newElementLink.value;
-    postNewElement(element.name, element.link);
-    closePopup(popupElement);
-  }
-};
 function openPopupPorfile() {
   profileTitleNew.value = profileTitle.textContent;
   profileSubtitleNew.value = profileSubtitle.textContent;
   openPopup(popupProfile);
+  blockSubmitButton(set, cardSubmitButton);
 };
-
 
 function addNewElement(evt) {
   evt.preventDefault();
-
   cardSubmitButton.textContent = "Создание...";
-  postNewElement(imagePopupImage.value, subtitlePopupImage.value)
+  postNewElement(newElementTitle.value, newElementLink.value)
     .then((element) => {
-      document.querySelector('#poupForm').reset();
       elements.prepend(createElement(element, profile));
+      evt.target.reset();
       closePopup(newElementId);
     })
     .catch((err) => {
@@ -84,39 +73,9 @@ function addNewElement(evt) {
     });
 };
 
-function addLike(element, card, profile) {
-  putLike(card._id)
-      .then((data) => {
-          countLike(element, data.likes, profile);
-      })
-      .catch((err) => {
-          console.error(err);
-      });
-}
-function removeLike(element, card, profile) {
-  unputLike(card._id)
-      .then((data) => {
-          countLike(element, data.likes, profile);
-      })
-      .catch((err) => {
-          console.error(err);
-      });
-}
-function deleteCard(element, card, profile) {
-  deleteMyElement(card._id)
-      .then((data) => {
-          countLike(element, data.likes, profile);
-      })
-      .catch((err) => {
-          console.error(err);
-      });
-}
-
 function saveProfile(evt) {
   evt.preventDefault();
   buttonAdd.textContent = 'Сохранение...';
-  profileTitle.textContent = profileTitleNew.value;
-  profileSubtitle.textContent = profileSubtitleNew.value;
   editProfile(profileTitleNew.value, profileSubtitleNew.value)
     .then((res) => {
       profileTitle.textContent = res.name;
@@ -132,7 +91,7 @@ function saveProfile(evt) {
 };
 
 function closePopupByEsc(evt) {
-  if (evt.keyCode == 27) {
+  if (evt.key === "Escape") {
     closePopup(document.querySelector('.popup_opened'));
   }
 };
@@ -161,9 +120,9 @@ buttonsExit.forEach((button) => {
   button.addEventListener('click', () => closePopup(popup));
 });
 
-popupElement.addEventListener('submit', saveElement);
+popupElement.addEventListener('submit', addNewElement);
 
 enableValidation(set);
 
-export { createElement, deleteCard, closePopupByEsc, openImage, addLike, removeLike, addNewElement };
+export { createElement, closePopupByEsc, openImage, addNewElement };
 
