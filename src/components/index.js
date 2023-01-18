@@ -20,21 +20,54 @@ Promise.all([getUser(), getInitialCards()])
     console.error(err);
   });
 
-function editAvatar(evt) {
-  evt.preventDefault();
-  buttonAvatar.textContent = 'Сохранение...';
-  const avatarValue = avatarLink.value;
-  editProfileAvatar(avatarValue).then((user) => {
-    profileAvatar.src = user.avatar;
-    closePopup(popupAvatar);
-  })
-    .catch((err) => {
-      console.error(err);
-    })
-    .finally(() => {
-      buttonAvatar.textContent = "Сохранить";
-    });
+function renderLoading (isLoading, button, buttonText = 'Сохранить', loadingText = 'Сохранение...') {
+  if (isLoading) {
+    button.textContent = loadingText;
+  } else {
+    button.textContent = buttonText;
+  }
 }
+function handleSubmit (request, evt, loadingText = 'Сохранение...') {
+  evt.preventDefault();
+  const submitButton = evt.submitter;
+  const initialText = submitButton.textContent;
+  renderLoading(true, submitButton, initialText, loadingText);
+  request()
+  .then(() => {
+    evt.target.reset();
+  })
+  .catch((err) => {
+    console.error(`Ошибка: ${err}`);
+  })
+  .finally(() => {
+    renderLoading(false, submitButton, initialText);
+  });
+}
+
+function editAvatar(evt) {
+  function makeRequest() {
+    return editProfileAvatar(avatarLink.value).then((res) => {
+      profileAvatar.src = res.avatar;
+      closePopup(popupAvatar);
+    });
+  }
+  handleSubmit(makeRequest, evt);
+}
+// function editAvatar(evt) {
+//   evt.preventDefault();
+//   buttonAvatar.textContent = 'Сохранение...';
+//   const avatarValue = avatarLink.value;
+//   editProfileAvatar(avatarValue).then((user) => {
+//     profileAvatar.src = user.avatar;
+//     closePopup(popupAvatar);
+//   })
+//     .catch((err) => {
+//       console.error(err);
+//     })
+//     .finally(() => {
+//       buttonAvatar.textContent = "Сохранить";
+//     });
+// }
 avatarForm.addEventListener('submit', editAvatar);
 
 buttonEditAvatar.addEventListener('click', function () {
@@ -57,38 +90,59 @@ function openPopupPorfile() {
 };
 
 function addNewElement(evt) {
-  evt.preventDefault();
-  cardSubmitButton.textContent = "Создание...";
-  postNewElement(newElementTitle.value, newElementLink.value)
-    .then((element) => {
+  function makeRequest() {
+    return postNewElement(newElementTitle.value, newElementLink.value).then((element) => {
       elements.prepend(createElement(element, profile));
-      evt.target.reset();
       closePopup(newElementId);
-    })
-    .catch((err) => {
-      console.error(err);
-    })
-    .finally(() => {
-      cardSubmitButton.textContent = "Создать";
     });
-};
+  }
+  handleSubmit(makeRequest, evt);
+}
+// function addNewElement(evt) {
+//   evt.preventDefault();
+//   cardSubmitButton.textContent = "Создание...";
+//   postNewElement(newElementTitle.value, newElementLink.value)
+//     .then((element) => {
+//       elements.prepend(createElement(element, profile));
+//       evt.target.reset();
+//       closePopup(newElementId);
+//     })
+//     .catch((err) => {
+//       console.error(err);
+//     })
+//     .finally(() => {
+//       cardSubmitButton.textContent = "Создать";
+//     });
+// };
 
 function saveProfile(evt) {
-  evt.preventDefault();
-  buttonAdd.textContent = 'Сохранение...';
-  editProfile(profileTitleNew.value, profileSubtitleNew.value)
-    .then((res) => {
+  function makeRequest() {
+    return editProfile(profileTitleNew.value, profileSubtitleNew.value).then((res) => {
       profileTitle.textContent = res.name;
       profileSubtitle.textContent = res.about;
       closePopup(popupProfile);
-    })
-    .catch((err) => {
-      console.error(err);
-    })
-    .finally(() => {
-      buttonAdd.textContent = "Сохранить";
     });
-};
+  }
+  handleSubmit(makeRequest, evt);
+}
+
+
+// function saveProfile(evt) {
+//   evt.preventDefault();
+//   buttonAdd.textContent = 'Сохранение...';
+//   editProfile(profileTitleNew.value, profileSubtitleNew.value)
+//     .then((res) => {
+//       profileTitle.textContent = res.name;
+//       profileSubtitle.textContent = res.about;
+//       closePopup(popupProfile);
+//     })
+//     .catch((err) => {
+//       console.error(err);
+//     })
+//     .finally(() => {
+//       buttonAdd.textContent = "Сохранить";
+//     });
+// };
 
 function closePopupByEsc(evt) {
   if (evt.key === "Escape") {

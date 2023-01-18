@@ -20,6 +20,12 @@ function createElement(element, user) {
         openImage(elementImage, elementTitle);
     });
 
+    element.likes.forEach(() => {
+        if (element.likes._id === user._id) {
+            like.classList.add('like_active');
+        }
+    });
+
     like.addEventListener('click', function (evt) {
         if (!evt.target.classList.contains('like_active')) {
             putLike(element._id)

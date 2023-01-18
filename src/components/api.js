@@ -5,6 +5,9 @@ const config = {
         'Content-Type': 'application/json'
     }
 };
+function request (url, options) {
+    return fetch(url, options).then(checkRes);
+}
 
 const checkRes = (res) => {
     if (res.ok) {
@@ -14,32 +17,29 @@ const checkRes = (res) => {
 };
 
 const getInitialCards = () => {
-    return fetch(`${config.url}/cards`, {
+    return request(`${config.url}/cards`, {
         headers: config.headers
     })
-        .then(res => checkRes(res))
 };
 
 const getUser = () => {
-    return fetch(`${config.url}/users/me`, {
+    return request(`${config.url}/users/me`, {
         headers: config.headers
     })
-        .then(res => checkRes(res))
 };
 
 const editProfileAvatar = (ava) => {
-    return fetch(`${config.url}/users/me/avatar`, {
+    return request(`${config.url}/users/me/avatar`, {
         method: 'PATCH',
         headers: config.headers,
         body: JSON.stringify({
             avatar: ava
         })
     })
-        .then(res => checkRes(res))
 };
 
 const editProfile = (title, subtitle) => {
-    return fetch(`${config.url}/users/me`, {
+    return request(`${config.url}/users/me`, {
         method: 'PATCH',
         headers: config.headers,
         body: JSON.stringify({
@@ -47,11 +47,10 @@ const editProfile = (title, subtitle) => {
             about: subtitle
         })
     })
-        .then(res => checkRes(res))
 };
 
 const postNewElement = (name, link) => {
-    return fetch(`${config.url}/cards`, {
+    return request(`${config.url}/cards`, {
         method: 'POST',
         headers: config.headers,
         body: JSON.stringify({
@@ -59,31 +58,27 @@ const postNewElement = (name, link) => {
             link: link
         })
     })
-        .then(res => checkRes(res))
 };
 
 const deleteMyElement = (elementId) => {
-    return fetch(`${config.url}/cards/${elementId}`, {
+    return request(`${config.url}/cards/${elementId}`, {
         method: 'DELETE',
         headers: config.headers
     })
-        .then(res => checkRes(res))
 };
 
 const putLike = (elementId) => {
-    return fetch(`${config.url}/cards/likes/${elementId}`, {
+    return request(`${config.url}/cards/likes/${elementId}`, {
         method: 'PUT',
         headers: config.headers
     })
-        .then(res => checkRes(res))
 };
 
 const unputLike = (elementId) => {
-    return fetch(`${config.url}/cards/likes/${elementId}`, {
+    return request(`${config.url}/cards/likes/${elementId}`, {
         method: 'DELETE',
         headers: config.headers
     })
-        .then(res => checkRes(res))
 };
 
 export { getInitialCards, getUser, editProfileAvatar, editProfile, postNewElement, deleteMyElement, putLike, unputLike }
