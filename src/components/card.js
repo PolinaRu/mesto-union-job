@@ -1,6 +1,15 @@
 import { elementTemplate, imagePopupImage } from './utils.js';
 import { openImage } from './index.js';
-import { deleteMyElement, putLike, unputLike } from './api.js';
+import { Api } from './api.js';
+
+// Апишник тут пока заглушкой, надо будет из индекса все передавать
+const api = new Api({
+    url: "https://nomoreparties.co/v1/plus-cohort-18",
+    headers: {
+      authorization: "761944ff-ca64-4e82-a14c-fe8b959c12ae",
+      "Content-Type": "application/json",
+    }
+  }); 
 
 function createElement(element, user) {
     const newElement = elementTemplate.querySelector('.element').cloneNode(true);
@@ -27,7 +36,7 @@ function createElement(element, user) {
 
     like.addEventListener('click', function (evt) {
         if (!evt.target.classList.contains('like_active')) {
-            putLike(element._id)
+            api.putLike(element._id)
                 .then((data) => {
                     evt.target.classList.add('like_active');
                     likeSum.textContent = data.likes.length;
@@ -36,7 +45,7 @@ function createElement(element, user) {
                     console.error(err);
                 })
         } else {
-            unputLike(element._id)
+            api.unputLike(element._id)
                 .then((data) => {
                     evt.target.classList.remove('like_active');
                     likeSum.textContent = data.likes.length;
@@ -49,7 +58,7 @@ function createElement(element, user) {
     if (user.id === element.owner._id) {
         deleteElement.classList.add('element__button_remove_active');
         deleteElement.addEventListener('click', () => {
-            deleteMyElement(element._id)
+            api.deleteMyElement(element._id)
                 .then(() => {
                     removeCard(deleteElement);
                 })

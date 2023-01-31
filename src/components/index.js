@@ -3,9 +3,17 @@ import { createElement } from './card.js';
 import { openPopup, closePopup } from './modal.js';
 import { enableValidation, blockSubmitButton } from './validate.js';
 import { set, newElementId, buttonEditAvatar, profile, avatarLink, avatarForm, buttonAvatar, popupProfile, popupAvatar, buttonEdit, buttonAdd, buttonsExit, profileAvatar, profileTitle, profileSubtitle, profileTitleNew, profileSubtitleNew, popupElement, newElementTitle, newElementLink, popupImage, imagePopupImage, subtitlePopupImage, elements, popups, cardSubmitButton } from './utils.js';
-import { getInitialCards, getUser, editProfileAvatar, editProfile, postNewElement } from './api.js';
+import { Api } from './api.js';
 
-Promise.all([getUser(), getInitialCards()])
+const api = new Api({
+  url: "https://nomoreparties.co/v1/plus-cohort-18",
+  headers: {
+    authorization: "761944ff-ca64-4e82-a14c-fe8b959c12ae",
+    "Content-Type": "application/json",
+  }
+}); 
+
+Promise.all([api.getUser(), api.getInitialCards()])
   .then(([user, cards]) => {
     profile.id = user._id;
     profileTitle.textContent = user.name;
@@ -46,28 +54,14 @@ function handleSubmit (request, evt, loadingText = 'Сохранение...') {
 
 function editAvatar(evt) {
   function makeRequest() {
-    return editProfileAvatar(avatarLink.value).then((res) => {
+    return api.editProfileAvatar(avatarLink.value).then((res) => {
       profileAvatar.src = res.avatar;
       closePopup(popupAvatar);
     });
   }
   handleSubmit(makeRequest, evt);
 }
-// function editAvatar(evt) {
-//   evt.preventDefault();
-//   buttonAvatar.textContent = 'Сохранение...';
-//   const avatarValue = avatarLink.value;
-//   editProfileAvatar(avatarValue).then((user) => {
-//     profileAvatar.src = user.avatar;
-//     closePopup(popupAvatar);
-//   })
-//     .catch((err) => {
-//       console.error(err);
-//     })
-//     .finally(() => {
-//       buttonAvatar.textContent = "Сохранить";
-//     });
-// }
+
 avatarForm.addEventListener('submit', editAvatar);
 
 buttonEditAvatar.addEventListener('click', function () {
@@ -91,33 +85,17 @@ function openPopupPorfile() {
 
 function addNewElement(evt) {
   function makeRequest() {
-    return postNewElement(newElementTitle.value, newElementLink.value).then((element) => {
+    return api.postNewElement(newElementTitle.value, newElementLink.value).then((element) => {
       elements.prepend(createElement(element, profile));
       closePopup(newElementId);
     });
   }
   handleSubmit(makeRequest, evt);
 }
-// function addNewElement(evt) {
-//   evt.preventDefault();
-//   cardSubmitButton.textContent = "Создание...";
-//   postNewElement(newElementTitle.value, newElementLink.value)
-//     .then((element) => {
-//       elements.prepend(createElement(element, profile));
-//       evt.target.reset();
-//       closePopup(newElementId);
-//     })
-//     .catch((err) => {
-//       console.error(err);
-//     })
-//     .finally(() => {
-//       cardSubmitButton.textContent = "Создать";
-//     });
-// };
 
 function saveProfile(evt) {
   function makeRequest() {
-    return editProfile(profileTitleNew.value, profileSubtitleNew.value).then((res) => {
+    return api.editProfile(profileTitleNew.value, profileSubtitleNew.value).then((res) => {
       profileTitle.textContent = res.name;
       profileSubtitle.textContent = res.about;
       closePopup(popupProfile);
@@ -125,24 +103,6 @@ function saveProfile(evt) {
   }
   handleSubmit(makeRequest, evt);
 }
-
-
-// function saveProfile(evt) {
-//   evt.preventDefault();
-//   buttonAdd.textContent = 'Сохранение...';
-//   editProfile(profileTitleNew.value, profileSubtitleNew.value)
-//     .then((res) => {
-//       profileTitle.textContent = res.name;
-//       profileSubtitle.textContent = res.about;
-//       closePopup(popupProfile);
-//     })
-//     .catch((err) => {
-//       console.error(err);
-//     })
-//     .finally(() => {
-//       buttonAdd.textContent = "Сохранить";
-//     });
-// };
 
 popups.forEach((item) => {
   item.addEventListener('mousedown', function (evt) {
@@ -172,5 +132,5 @@ popupElement.addEventListener('submit', addNewElement);
 
 enableValidation(set);
 
-export { createElement, closePopupByEsc, openImage, addNewElement };
+export { createElement, openImage, addNewElement };
 
