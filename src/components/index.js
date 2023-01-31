@@ -144,12 +144,6 @@ function saveProfile(evt) {
 //     });
 // };
 
-function closePopupByEsc(evt) {
-  if (evt.key === "Escape") {
-    closePopup(document.querySelector('.popup_opened'));
-  }
-};
-
 popups.forEach((item) => {
   item.addEventListener('mousedown', function (evt) {
     if (evt.target === item) {

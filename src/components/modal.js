@@ -1,13 +1,14 @@
-import {closePopupByEsc} from './index.js';
+function closePopupByEsc(evt) {
+    if (evt.key === "Escape") {
+      closePopup(document.querySelector('.popup_opened'));
+    }
+  };
 
-
-function openPopup(evt) {
+export function openPopup(evt) {
     evt.classList.add('popup_opened');
     window.addEventListener('keydown', closePopupByEsc);
 };
-function closePopup(evt) {
+export function closePopup(evt) {
     evt.classList.remove('popup_opened');
     window.removeEventListener('keydown', closePopupByEsc); 
 };
-
-export { openPopup, closePopup };
