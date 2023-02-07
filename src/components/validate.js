@@ -47,17 +47,15 @@ export class FormValidator {
     }
   }
 
-   _valid (inputList, inputElement, buttonElement) {
-    this._checkInputValidity(inputElement);
-    this._toggleButtonState(inputList, buttonElement);
-  }
-
   _setEventListeners() {
     const inputList = Array.from(this._formElement.querySelectorAll(this._set.inputSelector));
     const buttonElement = this._formElement.querySelector(this._set.submitButtonSelector);
     this._toggleButtonState(inputList, buttonElement);
     inputList.forEach((inputElement) => {
-      inputElement.addEventListener("input", this._valid.call(this,inputList, inputElement, buttonElement));
+      inputElement.addEventListener("input", () => {
+        this._checkInputValidity(inputElement);
+        this._toggleButtonState(inputList, buttonElement);
+      });
     });
   }
 
