@@ -1,8 +1,8 @@
 import '../pages/index.css';
 import { createElement } from './card.js';
 import { openPopup, closePopup } from './modal.js';
-import { enableValidation, blockSubmitButton } from './validate.js';
-import { set, newElementId, buttonEditAvatar, profile, avatarLink, avatarForm, buttonAvatar, popupProfile, popupAvatar, buttonEdit, buttonAdd, buttonsExit, profileAvatar, profileTitle, profileSubtitle, profileTitleNew, profileSubtitleNew, popupElement, newElementTitle, newElementLink, popupImage, imagePopupImage, subtitlePopupImage, elements, popups, cardSubmitButton } from './utils.js';
+import { FormValidator } from './validate.js';
+import { set, newElementId, buttonEditAvatar, profile, avatarLink, avatarForm, newElementForm, profileEditForm, popupProfile, popupAvatar, buttonEdit, buttonAdd, buttonsExit, profileAvatar, profileTitle, profileSubtitle, profileTitleNew, profileSubtitleNew, popupElement, newElementTitle, newElementLink, popupImage, imagePopupImage, subtitlePopupImage, elements, popups, cardSubmitButton } from './utils.js';
 import { Api } from './api.js';
 
 const api = new Api({
@@ -12,6 +12,10 @@ const api = new Api({
     "Content-Type": "application/json",
   }
 }); 
+
+const validateFormCard = new FormValidator(set, newElementForm);
+const validateFormProfile = new FormValidator(set, profileEditForm);
+const validateFormAvatar = new FormValidator(set, avatarForm);
 
 Promise.all([api.getUser(), api.getInitialCards()])
   .then(([user, cards]) => {
@@ -66,7 +70,7 @@ avatarForm.addEventListener('submit', editAvatar);
 
 buttonEditAvatar.addEventListener('click', function () {
   openPopup(popupAvatar);
-  blockSubmitButton(set, cardSubmitButton);
+  //blockSubmitButton(set, cardSubmitButton);
   });
 
 function openImage(src, alt) {
@@ -80,7 +84,7 @@ function openPopupPorfile() {
   profileTitleNew.value = profileTitle.textContent;
   profileSubtitleNew.value = profileSubtitle.textContent;
   openPopup(popupProfile);
-  blockSubmitButton(set, cardSubmitButton);
+  //blockSubmitButton(set, cardSubmitButton);
 };
 
 function addNewElement(evt) {
@@ -120,7 +124,7 @@ buttonAdd.addEventListener('click', () => {
   newElementTitle.value = "";
   newElementLink.value = "";
   openPopup(popupElement);
-  blockSubmitButton(set, cardSubmitButton);
+  //blockSubmitButton(set, cardSubmitButton);
 });
 
 buttonsExit.forEach((button) => {
@@ -130,7 +134,9 @@ buttonsExit.forEach((button) => {
 
 popupElement.addEventListener('submit', addNewElement);
 
-enableValidation(set);
+// включаем валидацию
+validateFormAvatar.enableValidation();
+validateFormProfile.enableValidation();
+validateFormCard.enableValidation();
 
 export { createElement, openImage, addNewElement };
-

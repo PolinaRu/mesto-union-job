@@ -36,5 +36,7 @@ const avatarLink = document.querySelector('#avatar-link');
 const profile = document.querySelector('#profileId');
 const buttonEditAvatar = document.querySelector('#buttonEditAvatar');
 const newElementId = document.querySelector('#newElementId');
+export const newElementForm = document.querySelector('#popupForm');
+export const profileEditForm = document.querySelector('#profileEdit');
 
 export { set, newElementId, buttonEditAvatar, profile, avatarLink, avatarForm, buttonAvatar, popupAvatar, elements, elementImage, elementTitle, popupProfile, buttonEdit, buttonAdd, buttonsExit, profileAvatar, profileTitle, profileSubtitle, profileTitleNew, profileSubtitleNew, popupElement, popupElementContainer, newElementTitle, newElementLink, popupImage, imagePopupImage, subtitlePopupImage, elementTemplate, popups, cardSubmitButton };
