@@ -1,6 +1,6 @@
 import { elementTemplate, imagePopupImage } from './utils.js';
 import { openImage } from './index.js';
-import { Api } from './api.js';
+import { Api } from './Api.js';
 
 // Апишник тут пока заглушкой, надо будет из индекса все передавать
 const api = new Api({

@@ -1,9 +1,10 @@
 import '../pages/index.css';
 import { createElement } from './card.js';
 import { openPopup, closePopup } from './modal.js';
-import { FormValidator } from './validate.js';
+import { FormValidator } from './Validate.js';
 import { set, newElementId, buttonEditAvatar, profile, avatarLink, avatarForm, newElementForm, profileEditForm, popupProfile, popupAvatar, buttonEdit, buttonAdd, buttonsExit, profileAvatar, profileTitle, profileSubtitle, profileTitleNew, profileSubtitleNew, popupElement, newElementTitle, newElementLink, popupImage, imagePopupImage, subtitlePopupImage, elements, popups, cardSubmitButton } from './utils.js';
-import { Api } from './api.js';
+import { Api } from './Api.js';
+import { UserInfo } from './UserInfo';
 
 const api = new Api({
   url: "https://nomoreparties.co/v1/plus-cohort-18",
@@ -12,6 +13,7 @@ const api = new Api({
     "Content-Type": "application/json",
   }
 }); 
+const userInfo = new UserInfo(profileTitle, profileSubtitle, profileAvatar);
 
 const validateFormCard = new FormValidator(set, newElementForm);
 const validateFormProfile = new FormValidator(set, profileEditForm);
@@ -20,9 +22,9 @@ const validateFormAvatar = new FormValidator(set, avatarForm);
 Promise.all([api.getUser(), api.getInitialCards()])
   .then(([user, cards]) => {
     profile.id = user._id;
-    profileTitle.textContent = user.name;
-    profileSubtitle.textContent = user.about;
-    profileAvatar.src = user.avatar;
+    userInfo.setUserInfo(user.name, user.about);
+    userInfo.setAvatar(user.avatar);
+
     cards.forEach((card) => {
       const hostCard = createElement(card, profile);
       elements.append(hostCard);
@@ -81,8 +83,9 @@ function openImage(src, alt) {
 };
 
 function openPopupPorfile() {
-  profileTitleNew.value = profileTitle.textContent;
-  profileSubtitleNew.value = profileSubtitle.textContent;
+  const user = userInfo.getUserInfo();
+  profileTitleNew.value = user.name;
+  profileSubtitleNew.value = user.about;
   openPopup(popupProfile);
   //blockSubmitButton(set, cardSubmitButton);
 };
