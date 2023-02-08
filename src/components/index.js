@@ -4,9 +4,10 @@ import { openPopup, closePopup } from './modal.js';
 import { FormValidator } from './Validate.js';
 import { set, newElementId, buttonEditAvatar, profile, avatarLink, avatarForm, 
   newElementForm, profileEditForm, popupProfile, popupAvatarName, buttonEdit, buttonAdd, buttonsExit, profileAvatar, profileTitle, profileSubtitle, profileTitleNew, profileSubtitleNew, popupElement, newElementTitle, newElementLink, popupImage, imagePopupImage, subtitlePopupImage, elements, popups, cardSubmitButton } from './utils.js';
-import { Api } from './Api.js';
+import Api from './Api.js';
 import { UserInfo } from './UserInfo';
-import { Popup } from './Popup';
+import Popup from './Popup';
+//import PopupWithImage from './PopupWithImage'; //popupImage.querySelector('.popup__image')
 
 const api = new Api({
   url: "https://nomoreparties.co/v1/plus-cohort-18",
@@ -79,13 +80,6 @@ buttonEditAvatar.addEventListener('click', function () {
   popupAvatar.open();
   });
 
-function openImage(src, alt) {
-  imagePopupImage.src = src.src;
-  imagePopupImage.alt = alt.alt;
-  subtitlePopupImage.textContent = alt.textContent;
-  openPopup(popupImage);
-};
-
 function openPopupPorfile() {
   const user = userInfo.getUserInfo();
   profileTitleNew.value = user.name;
@@ -142,4 +136,4 @@ validateFormAvatar.enableValidation();
 validateFormProfile.enableValidation();
 validateFormCard.enableValidation();
 
-export { createElement, openImage, addNewElement };
+export { createElement, addNewElement };
