@@ -1,10 +1,13 @@
 import '../pages/index.css';
 import { createElement } from './card.js';
 import { openPopup, closePopup } from './modal.js';
-import { FormValidator } from './Validate.js';
-import { set, newElementId, buttonEditAvatar, profile, avatarLink, avatarForm, newElementForm, profileEditForm, popupProfile, popupAvatar, buttonEdit, buttonAdd, buttonsExit, profileAvatar, profileTitle, profileSubtitle, profileTitleNew, profileSubtitleNew, popupElement, newElementTitle, newElementLink, popupImage, imagePopupImage, subtitlePopupImage, elements, popups, cardSubmitButton } from './utils.js';
-import { Api } from './Api.js';
+import FormValidator from './Validate.js';
+import { set, newElementId, buttonEditAvatar, profile, avatarLink, avatarForm, 
+  newElementForm, profileEditForm, popupProfile, popupAvatarName, buttonEdit, buttonAdd, buttonsExit, profileAvatar, profileTitle, profileSubtitle, profileTitleNew, profileSubtitleNew, popupElement, newElementTitle, newElementLink, popupImage, imagePopupImage, subtitlePopupImage, elements, popups, cardSubmitButton } from './utils.js';
+import Api from './Api.js';
 import { UserInfo } from './UserInfo';
+import Popup from './Popup';
+//import PopupWithImage from './PopupWithImage'; //popupImage.querySelector('.popup__image')
 
 const api = new Api({
   url: "https://nomoreparties.co/v1/plus-cohort-18",
@@ -14,10 +17,13 @@ const api = new Api({
   }
 }); 
 const userInfo = new UserInfo(profileTitle, profileSubtitle, profileAvatar);
-
 const validateFormCard = new FormValidator(set, newElementForm);
 const validateFormProfile = new FormValidator(set, profileEditForm);
 const validateFormAvatar = new FormValidator(set, avatarForm);
+const popupAvatar = new Popup(popupAvatarName);
+
+//включаем кнопки закрытия
+popupAvatar.setEventListeners();
 
 Promise.all([api.getUser(), api.getInitialCards()])
   .then(([user, cards]) => {
@@ -61,8 +67,8 @@ function handleSubmit (request, evt, loadingText = 'Сохранение...') {
 function editAvatar(evt) {
   function makeRequest() {
     return api.editProfileAvatar(avatarLink.value).then((res) => {
-      profileAvatar.src = res.avatar;
-      closePopup(popupAvatar);
+      userInfo.setAvatar(res.avatar);
+      popupAvatar.close();
     });
   }
   handleSubmit(makeRequest, evt);
@@ -71,23 +77,14 @@ function editAvatar(evt) {
 avatarForm.addEventListener('submit', editAvatar);
 
 buttonEditAvatar.addEventListener('click', function () {
-  openPopup(popupAvatar);
-  //blockSubmitButton(set, cardSubmitButton);
+  popupAvatar.open();
   });
-
-function openImage(src, alt) {
-  imagePopupImage.src = src.src;
-  imagePopupImage.alt = alt.alt;
-  subtitlePopupImage.textContent = alt.textContent;
-  openPopup(popupImage);
-};
 
 function openPopupPorfile() {
   const user = userInfo.getUserInfo();
   profileTitleNew.value = user.name;
   profileSubtitleNew.value = user.about;
   openPopup(popupProfile);
-  //blockSubmitButton(set, cardSubmitButton);
 };
 
 function addNewElement(evt) {
@@ -103,8 +100,8 @@ function addNewElement(evt) {
 function saveProfile(evt) {
   function makeRequest() {
     return api.editProfile(profileTitleNew.value, profileSubtitleNew.value).then((res) => {
-      profileTitle.textContent = res.name;
-      profileSubtitle.textContent = res.about;
+      //profileTitle.textContent = res.name;
+      //profileSubtitle.textContent = res.about;
       closePopup(popupProfile);
     });
   }
@@ -120,20 +117,17 @@ popups.forEach((item) => {
 });
 
 buttonEdit.addEventListener('click', openPopupPorfile);
-
 popupProfile.addEventListener('submit', saveProfile);
-
 buttonAdd.addEventListener('click', () => {
   newElementTitle.value = "";
   newElementLink.value = "";
   openPopup(popupElement);
-  //blockSubmitButton(set, cardSubmitButton);
 });
 
-buttonsExit.forEach((button) => {
+/*buttonsExit.forEach((button) => {
   const popup = button.closest('.popup');
   button.addEventListener('click', () => closePopup(popup));
-});
+});*/
 
 popupElement.addEventListener('submit', addNewElement);
 
@@ -142,4 +136,4 @@ validateFormAvatar.enableValidation();
 validateFormProfile.enableValidation();
 validateFormCard.enableValidation();
 
-export { createElement, openImage, addNewElement };
+export { /*createElement,*/ addNewElement };
