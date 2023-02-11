@@ -1,4 +1,4 @@
-import { elementTemplate, imagePopupImage, popupImage, subtitlePopupImage } from './utils.js';
+import { elementTemplate, imagePopupImage, popupImage, subtitlePopupImage } from '../utils/utils.js';
 import Api from './Api.js';
 import PopupWithImage from './PopupWithImage.js';
 

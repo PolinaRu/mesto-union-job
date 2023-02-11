@@ -1,12 +1,15 @@
 import '../pages/index.css';
-import { createElement } from './card.js';
-import { openPopup, closePopup } from './modal.js';
-import FormValidator from './Validate.js';
+import { createElement } from '../components/card.js';
+import { openPopup, closePopup } from '../components/modal.js';
+import FormValidator from '../components/FormValidator.js';
 import { set, newElementId, buttonEditAvatar, profile, avatarLink, avatarForm, 
-  newElementForm, profileEditForm, popupProfile, popupAvatarName, buttonEdit, buttonAdd, buttonsExit, profileAvatar, profileTitle, profileSubtitle, profileTitleNew, profileSubtitleNew, popupElement, newElementTitle, newElementLink, popupImage, imagePopupImage, subtitlePopupImage, elements, popups, cardSubmitButton } from './utils.js';
-import Api from './Api.js';
-import { UserInfo } from './UserInfo';
-import Popup from './Popup';
+  newElementForm, profileEditForm, popupProfile, popupAvatarName, buttonEdit, buttonAdd,
+   buttonsExit, profileAvatar, profileTitle, profileSubtitle, profileTitleNew, profileSubtitleNew, 
+   popupElement, newElementTitle, newElementLink, popupImage, imagePopupImage, subtitlePopupImage,
+   elements, popups, cardSubmitButton } from '../utils/utils.js';
+import Api from '../components/Api.js';
+import { UserInfo } from '../components/UserInfo';
+import Popup from '../components/Popup';
 //import PopupWithImage from './PopupWithImage'; //popupImage.querySelector('.popup__image')
 
 const api = new Api({
