@@ -1,4 +1,4 @@
-import { elementTemplate, imagePopupImage, popupImage, subtitlePopupImage } from '../utils/utils.js';
+import { imagePopupImage, popupImage, subtitlePopupImage } from '../utils/utils.js';
 import Api from './Api.js';
 import PopupWithImage from './PopupWithImage.js';
 
@@ -10,12 +10,14 @@ const api = new Api({
       "Content-Type": "application/json",
     }
   }); 
+
+const elementTemplate = document.querySelector('#elementTemplate').content;
   
 //PopupImage тоже заглушка, будем передавать колбэк из индекса
 const popupImg = new PopupWithImage(popupImage, imagePopupImage, subtitlePopupImage);
  popupImg.setEventListeners();
 
-function createElement(element, user) {
+function createElement(element, userId) {
     const newElement = elementTemplate.querySelector('.element').cloneNode(true);
     const elementImage = newElement.querySelector('.element__image');
     const elementTitle = newElement.querySelector('.element__title');
@@ -32,7 +34,7 @@ function createElement(element, user) {
     });
 
     //отрисовываем лайк, если он был
-  if (element.likes.some((item) => {return item._id === user.id;})) {
+  if (element.likes.some((item) => {return item._id === userId;})) {
     like.classList.add("like_active");
   }
 
@@ -57,7 +59,7 @@ function createElement(element, user) {
                 })
         }
     });
-    if (user.id === element.owner._id) {
+    if (userId === element.owner._id) {
         deleteElement.classList.add('element__button_remove_active');
         deleteElement.addEventListener('click', () => {
             api.deleteMyElement(element._id)

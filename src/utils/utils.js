@@ -7,9 +7,7 @@ const set = {
   errorClass: 'popup__input-error_active'
 };
   
-const elements = document.querySelector('.elements__list');
-const elementImage = elements.querySelector('.element__image');
-const elementTitle = elements.querySelector('.element__title');
+const elements = '.elements__list';
 const popupProfileName = '.popup-profile';
 const popupAvatarName = '.popup-avatar';
 const buttonEdit = document.querySelector('.profile__button_making_edit');
@@ -26,7 +24,7 @@ const newElementLink = document.querySelector('#element-link');
 const popupImage = '.popup-image';
 const imagePopupImage = '.popup__image';
 const subtitlePopupImage = '.popup__subtitle';
-const elementTemplate = document.querySelector('#elementTemplate').content;
+const elementTemplate = '#elementTemplate';
 const popups = document.querySelectorAll('.popup');
 const cardSubmitButton = document.querySelector('#submitButton');
 const buttonAvatar = document.querySelector('#avatarSubmit');
@@ -37,4 +35,4 @@ const buttonEditAvatar = document.querySelector('#buttonEditAvatar');
 const newElementId = document.querySelector('#newElementId');
 export const newElementForm = document.querySelector('#popupForm');
 export const profileEditForm = document.querySelector('#profileEdit');
-export { set, newElementId, buttonEditAvatar, profile, avatarLink, avatarForm, buttonAvatar, popupAvatarName, elements, elementImage, elementTitle, popupProfileName, buttonEdit, buttonAdd, buttonsExit, profileAvatar, profileTitle, profileSubtitle, profileTitleNew, profileSubtitleNew, popupElementName, newElementTitle, newElementLink, popupImage, imagePopupImage, subtitlePopupImage, elementTemplate, popups, cardSubmitButton };
+export { set, newElementId, buttonEditAvatar, profile, avatarLink, avatarForm, buttonAvatar, popupAvatarName, elements, popupProfileName, buttonEdit, buttonAdd, buttonsExit, profileAvatar, profileTitle, profileSubtitle, profileTitleNew, profileSubtitleNew, popupElementName, newElementTitle, newElementLink, popupImage, imagePopupImage, subtitlePopupImage, elementTemplate, popups, cardSubmitButton };

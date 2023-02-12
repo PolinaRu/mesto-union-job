@@ -1,16 +1,19 @@
 import '../pages/index.css';
 import { createElement } from '../components/card.js';
-import { openPopup, closePopup } from '../components/modal.js';
+import { closePopup } from '../components/modal.js';
 import FormValidator from '../components/FormValidator.js';
-import { set, newElementId, buttonEditAvatar, profile, avatarLink, avatarForm, 
+import { set, buttonEditAvatar, profile, avatarLink, avatarForm, 
   newElementForm, profileEditForm, popupProfileName, popupAvatarName, buttonEdit, buttonAdd,
-   buttonsExit, profileAvatar, profileTitle, profileSubtitle, profileTitleNew, profileSubtitleNew, 
-   popupElementName, newElementTitle, newElementLink, popupImage, imagePopupImage, subtitlePopupImage,
-   elements, popups, cardSubmitButton } from '../utils/utils.js';
+   profileAvatar, profileTitle, profileSubtitle, profileTitleNew, profileSubtitleNew, 
+   popupElementName, newElementTitle, newElementLink,
+   imagePopupImage, popupImage, subtitlePopupImage, 
+   elements, popups, elementTemplate } from '../utils/utils.js';
 import Api from '../components/Api.js';
 import UserInfo from '../components/UserInfo';
 import PopupWithForm from '../components/PopupWithForm';
-//import PopupWithImage from './PopupWithImage'; //popupImage.querySelector('.popup__image')
+import Section from '../components/Section';
+import Card from '../components/Card1';
+import PopupWithImage from '../components/PopupWithImage';
 
 const api = new Api({
   url: "https://nomoreparties.co/v1/plus-cohort-18",
@@ -26,11 +29,22 @@ const validateFormAvatar = new FormValidator(set, avatarForm);
 const popupAvatar = new PopupWithForm(popupAvatarName, editAvatar);
 const popupProfile = new PopupWithForm(popupProfileName, saveProfile);
 const popupElement = new PopupWithForm(popupElementName, addNewElement);
+const popupImg = new PopupWithImage(popupImage, imagePopupImage, subtitlePopupImage);
+ 
+const cardList = new Section({
+  data: [],
+  renderer: (item) => {
+    const card = new Card(item, profile.id, popupImg.open.bind(popupImg), api.putLike.bind(api), api.unputLike.bind(api), api.deleteMyElement.bind(api), elementTemplate);
+    const cardElement = card.generate();
+    cardList.setItem(cardElement);
+  }
+}, elements);
 
 //включаем кнопки закрытия
 popupAvatar.setEventListeners();
 popupProfile.setEventListeners();
 popupElement.setEventListeners();
+popupImg.setEventListeners();
 
 Promise.all([api.getUser(), api.getInitialCards()])
   .then(([user, cards]) => {
@@ -38,10 +52,8 @@ Promise.all([api.getUser(), api.getInitialCards()])
     userInfo.setUserInfo(user.name, user.about);
     userInfo.setAvatar(user.avatar);
 
-    cards.forEach((card) => {
-      const hostCard = createElement(card, profile);
-      elements.append(hostCard);
-    });
+    cardList.setInitData(cards);
+    cardList.renderItems();
   })
   .catch((err) => {
     console.error(err);
@@ -95,8 +107,10 @@ function openPopupPorfile() {
 function addNewElement(evt) {
   function makeRequest() {
     return api.postNewElement(newElementTitle.value, newElementLink.value).then((element) => {
-      elements.prepend(createElement(element, profile));
-      closePopup(newElementId);
+      const card = new Card(element, profile.id, popupImg.open.bind(popupImg), api.putLike.bind(api), api.unputLike.bind(api), api.deleteMyElement.bind(api), elementTemplate);
+      const cardElement = card.generate();
+      cardList.setItem(cardElement);
+      popupElement.close();
     });
   }
   handleSubmit(makeRequest, evt);
