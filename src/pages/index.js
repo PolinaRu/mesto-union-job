@@ -1,6 +1,4 @@
 import '../pages/index.css';
-import { createElement } from '../components/card.js';
-import { closePopup } from '../components/modal.js';
 import FormValidator from '../components/FormValidator.js';
 import { set, buttonEditAvatar, profile, avatarLink, avatarForm, 
   newElementForm, profileEditForm, popupProfileName, popupAvatarName, buttonEdit, buttonAdd,
@@ -12,7 +10,7 @@ import Api from '../components/Api.js';
 import UserInfo from '../components/UserInfo';
 import PopupWithForm from '../components/PopupWithForm';
 import Section from '../components/Section';
-import Card from '../components/Card1';
+import Card from '../components/Card';
 import PopupWithImage from '../components/PopupWithImage';
 
 const api = new Api({
@@ -126,14 +124,6 @@ function saveProfile(evt) {
   handleSubmit(makeRequest, evt);
 }
 
-popups.forEach((item) => {
-  item.addEventListener('mousedown', function (evt) {
-    if (evt.target === item) {
-      closePopup(item);
-    }
-  })
-});
-
 buttonEdit.addEventListener('click', openPopupPorfile);
 buttonAdd.addEventListener('click', () => {
   newElementTitle.value = "";
@@ -145,5 +135,3 @@ buttonAdd.addEventListener('click', () => {
 validateFormAvatar.enableValidation();
 validateFormProfile.enableValidation();
 validateFormCard.enableValidation();
-
-export { addNewElement };

@@ -1,82 +1,79 @@
-import { imagePopupImage, popupImage, subtitlePopupImage } from '../utils/utils.js';
-import Api from './Api.js';
-import PopupWithImage from './PopupWithImage.js';
+export default class Card {
+  constructor (card, userId, handleCardClick, handleLike, handleDislike, handleDelElement, selector) {
+    this._cardElement = document.querySelector(selector).content;
+    this._handleCardClick = handleCardClick;
+    this._handleLike = handleLike;
+    this._handleDislike = handleDislike;
+    this._handleDelElement = handleDelElement;
 
-// Апишник тут пока заглушкой, надо будет из индекса все передавать
-const api = new Api({
-    url: "https://nomoreparties.co/v1/plus-cohort-18",
-    headers: {
-      authorization: "761944ff-ca64-4e82-a14c-fe8b959c12ae",
-      "Content-Type": "application/json",
-    }
-  }); 
-
-const elementTemplate = document.querySelector('#elementTemplate').content;
-  
-//PopupImage тоже заглушка, будем передавать колбэк из индекса
-const popupImg = new PopupWithImage(popupImage, imagePopupImage, subtitlePopupImage);
- popupImg.setEventListeners();
-
-function createElement(element, userId) {
-    const newElement = elementTemplate.querySelector('.element').cloneNode(true);
-    const elementImage = newElement.querySelector('.element__image');
-    const elementTitle = newElement.querySelector('.element__title');
-    const like = newElement.querySelector('.like');
-    const deleteElement = newElement.querySelector('.element__button_remove');
-    const likeSum = newElement.querySelector('.element__like-sum');
-    elementTitle.textContent = element.name;
-    elementImage.src = element.link;
-    elementImage.alt = element.name;
-    likeSum.textContent = element.likes.length;
-
-    elementImage.addEventListener('click', () => {
-        popupImg.open(elementImage, elementTitle); //эта функция и будет проброшена коллбэком
-    });
-
-    //отрисовываем лайк, если он был
-  if (element.likes.some((item) => {return item._id === userId;})) {
-    like.classList.add("like_active");
+    this._userId = userId;
+    this._card = card;
   }
 
-    like.addEventListener('click', function (evt) {
-        if (!evt.target.classList.contains('like_active')) {
-            api.putLike(element._id)
-                .then((data) => {
-                    evt.target.classList.add('like_active');
-                    likeSum.textContent = data.likes.length;
-                })
-                .catch((err) => {
-                    console.error(err);
-                })
-        } else {
-            api.unputLike(element._id)
-                .then((data) => {
-                    evt.target.classList.remove('like_active');
-                    likeSum.textContent = data.likes.length;
-                })
-                .catch((err) => {
-                    console.error(err);
-                })
-        }
-    });
-    if (userId === element.owner._id) {
-        deleteElement.classList.add('element__button_remove_active');
-        deleteElement.addEventListener('click', () => {
-            api.deleteMyElement(element._id)
-                .then(() => {
-                    removeCard(deleteElement);
-                })
-                .catch((err) => {
-                    console.error(err)
-                })
+  _toggleLike(evt) {
+    if (evt.target.classList.contains("like_active")) {
+      // отправляем дизлайк, отрисовываем новое количество, убираем заливку
+      this._handleDislike(this._card._id)
+        .then((res) => {
+          evt.target.nextElementSibling.textContent = res.likes.length;
+          evt.target.classList.remove("like_active");
+        })
+        .catch((err) => {
+          console.log(err); // выводим ошибку в консоль
+        });
+    } else {
+      this._handleLike(this._card._id)
+        .then((res) => {
+          evt.target.nextElementSibling.textContent = res.likes.length;
+          evt.target.classList.add("like_active");
+        })
+        .catch((err) => {
+          console.log(err); // выводим ошибку в консоль
         });
     }
-    return newElement;
-}
+  }
 
-function removeCard(card) {
-    const element = card.closest('.element');
-    element.remove();
-}
+  generate() {
+    const cardElement = this._cardElement.cloneNode(true);
+    const elementImg = cardElement.querySelector(".element__image");
+    const elementLike = cardElement.querySelector(".like");
+    const elementDrop = cardElement.querySelector(".element__button_remove");
+  
+    cardElement.querySelector(".element__title").textContent = this._card.name;
+    cardElement.querySelector(".element__like-sum").textContent =
+      this._card.likes.length;
+    elementImg.src = this._card.link;
+    elementImg.alt =this._card.name;
+  
+    elementLike.addEventListener("click", (evt)=> this._toggleLike(evt)); 
 
-export { createElement }; 
+    //отрисовываем лайк, если он был
+    if (
+      this._card.likes.some((item) => {
+        return item._id === this._userId;
+      })
+    ) {
+      elementLike.classList.add("like_active");
+    }
+  
+    //проверяем рисовать ли корзину
+    if (this._userId == this._card.owner._id) {
+      elementDrop.classList.add('element__button_remove_active');
+      elementDrop.addEventListener("click", (evt) => {
+        this._handleDelElement(this._card._id)
+          .then(() => evt.target.closest(".element").remove())
+          .catch((err) => {
+            console.error(err);
+          });
+      });
+    } /*else {
+      elementDrop.style.display = "none";
+    }*/
+  
+    elementImg.addEventListener("click", () => {
+      this._handleCardClick(this._card.link, this._card.name);
+    });
+  
+    return cardElement;
+  }
+}
