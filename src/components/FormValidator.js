@@ -76,7 +76,6 @@ export default class FormValidator {
       });
     });
     this._formElement.addEventListener("reset", () => {
-      console.log("сбросили форму, должна почиститься кнопка");
       this._removeValidationErrors();
       setTimeout(() => {
         this._toggleButtonState(inputList, buttonElement);

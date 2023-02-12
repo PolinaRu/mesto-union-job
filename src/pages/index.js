@@ -3,13 +3,13 @@ import { createElement } from '../components/card.js';
 import { openPopup, closePopup } from '../components/modal.js';
 import FormValidator from '../components/FormValidator.js';
 import { set, newElementId, buttonEditAvatar, profile, avatarLink, avatarForm, 
-  newElementForm, profileEditForm, popupProfile, popupAvatarName, buttonEdit, buttonAdd,
+  newElementForm, profileEditForm, popupProfileName, popupAvatarName, buttonEdit, buttonAdd,
    buttonsExit, profileAvatar, profileTitle, profileSubtitle, profileTitleNew, profileSubtitleNew, 
-   popupElement, newElementTitle, newElementLink, popupImage, imagePopupImage, subtitlePopupImage,
+   popupElementName, newElementTitle, newElementLink, popupImage, imagePopupImage, subtitlePopupImage,
    elements, popups, cardSubmitButton } from '../utils/utils.js';
 import Api from '../components/Api.js';
-import { UserInfo } from '../components/UserInfo';
-import Popup from '../components/Popup';
+import UserInfo from '../components/UserInfo';
+import PopupWithForm from '../components/PopupWithForm';
 //import PopupWithImage from './PopupWithImage'; //popupImage.querySelector('.popup__image')
 
 const api = new Api({
@@ -23,10 +23,14 @@ const userInfo = new UserInfo(profileTitle, profileSubtitle, profileAvatar);
 const validateFormCard = new FormValidator(set, newElementForm);
 const validateFormProfile = new FormValidator(set, profileEditForm);
 const validateFormAvatar = new FormValidator(set, avatarForm);
-const popupAvatar = new Popup(popupAvatarName);
+const popupAvatar = new PopupWithForm(popupAvatarName, editAvatar);
+const popupProfile = new PopupWithForm(popupProfileName, saveProfile);
+const popupElement = new PopupWithForm(popupElementName, addNewElement);
 
 //включаем кнопки закрытия
 popupAvatar.setEventListeners();
+popupProfile.setEventListeners();
+popupElement.setEventListeners();
 
 Promise.all([api.getUser(), api.getInitialCards()])
   .then(([user, cards]) => {
@@ -77,8 +81,6 @@ function editAvatar(evt) {
   handleSubmit(makeRequest, evt);
 }
 
-avatarForm.addEventListener('submit', editAvatar);
-
 buttonEditAvatar.addEventListener('click', function () {
   popupAvatar.open();
   });
@@ -87,7 +89,7 @@ function openPopupPorfile() {
   const user = userInfo.getUserInfo();
   profileTitleNew.value = user.name;
   profileSubtitleNew.value = user.about;
-  openPopup(popupProfile);
+  popupProfile.open();
 };
 
 function addNewElement(evt) {
@@ -103,9 +105,8 @@ function addNewElement(evt) {
 function saveProfile(evt) {
   function makeRequest() {
     return api.editProfile(profileTitleNew.value, profileSubtitleNew.value).then((res) => {
-      //profileTitle.textContent = res.name;
-      //profileSubtitle.textContent = res.about;
-      closePopup(popupProfile);
+      userInfo.setUserInfo(profileTitleNew.value, profileSubtitleNew.value);
+      popupProfile.close();
     });
   }
   handleSubmit(makeRequest, evt);
@@ -120,23 +121,15 @@ popups.forEach((item) => {
 });
 
 buttonEdit.addEventListener('click', openPopupPorfile);
-popupProfile.addEventListener('submit', saveProfile);
 buttonAdd.addEventListener('click', () => {
   newElementTitle.value = "";
   newElementLink.value = "";
-  openPopup(popupElement);
+  popupElement.open();
 });
-
-/*buttonsExit.forEach((button) => {
-  const popup = button.closest('.popup');
-  button.addEventListener('click', () => closePopup(popup));
-});*/
-
-popupElement.addEventListener('submit', addNewElement);
 
 // включаем валидацию
 validateFormAvatar.enableValidation();
 validateFormProfile.enableValidation();
 validateFormCard.enableValidation();
 
-export { /*createElement,*/ addNewElement };
+export { addNewElement };
