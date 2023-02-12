@@ -1,6 +1,6 @@
-import { elementTemplate, imagePopupImage } from './utils.js';
-import { openImage } from './index.js';
-import { Api } from './Api.js';
+import { elementTemplate, imagePopupImage, popupImage, subtitlePopupImage } from '../utils/utils.js';
+import Api from './Api.js';
+import PopupWithImage from './PopupWithImage.js';
 
 // Апишник тут пока заглушкой, надо будет из индекса все передавать
 const api = new Api({
@@ -10,6 +10,10 @@ const api = new Api({
       "Content-Type": "application/json",
     }
   }); 
+  
+//PopupImage тоже заглушка, будем передавать колбэк из индекса
+const popupImg = new PopupWithImage(popupImage, imagePopupImage, subtitlePopupImage);
+ popupImg.setEventListeners();
 
 function createElement(element, user) {
     const newElement = elementTemplate.querySelector('.element').cloneNode(true);
@@ -24,9 +28,7 @@ function createElement(element, user) {
     likeSum.textContent = element.likes.length;
 
     elementImage.addEventListener('click', () => {
-        imagePopupImage.src = elementImage.src;
-        imagePopupImage.alt = elementTitle.textContent;
-        openImage(elementImage, elementTitle);
+        popupImg.open(elementImage, elementTitle); //эта функция и будет проброшена коллбэком
     });
 
     //отрисовываем лайк, если он был
