@@ -36,16 +36,17 @@ export default class Api {
     });
   }
 
-  editProfile(title, subtitle) {
+  editProfile(data) {
     return this._request(`${this._url}/users/me`, {
       method: "PATCH",
       headers: this._headers,
       body: JSON.stringify({
-        name: title,
-        about: subtitle,
+        name: data.name,
+        about: data.about,
       }),
     });
   }
+  
   postNewElement(name, link) {
     return this._request(`${this._url}/cards`, {
       method: "POST",

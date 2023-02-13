@@ -6,7 +6,7 @@ export default class Section {
   };
 
   setItem(element) {
-      this._container.append(element);
+      this._container.prepend(element);
   };
 
   prependItem(element) {
@@ -18,7 +18,7 @@ export default class Section {
   }
 
   renderItems() {
-      this._initialArray.forEach(item => {
+      this._initialArray.reverse().forEach(item => {
           this._renderer(item)});
   };
 
