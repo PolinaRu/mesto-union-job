@@ -1,6 +1,9 @@
 export default class Card {
   constructor (card, userId, handleCardClick, handleLike, handleDislike, handleDelElement, selector) {
-    this._cardElement = document.querySelector(selector).content;
+    this._cardElement = document.querySelector(selector).content.cloneNode(true);
+    this._elementLike = this._cardElement.querySelector(".like");
+    this._elementImg = this._cardElement.querySelector(".element__image");
+    this._elementDrop = this._cardElement.querySelector(".element__button_remove");
     this._handleCardClick = handleCardClick;
     this._handleLike = handleLike;
     this._handleDislike = handleDislike;
@@ -33,19 +36,12 @@ export default class Card {
     }
   }
 
-  generate() {
-    const cardElement = this._cardElement.cloneNode(true);
-    const elementImg = cardElement.querySelector(".element__image");
-    const elementLike = cardElement.querySelector(".like");
-    const elementDrop = cardElement.querySelector(".element__button_remove");
-  
-    cardElement.querySelector(".element__title").textContent = this._card.name;
-    cardElement.querySelector(".element__like-sum").textContent =
+  _createCard() {
+    this._cardElement.querySelector(".element__title").textContent = this._card.name;
+    this._cardElement.querySelector(".element__like-sum").textContent =
       this._card.likes.length;
-    elementImg.src = this._card.link;
-    elementImg.alt =this._card.name;
-  
-    elementLike.addEventListener("click", (evt)=> this._toggleLike(evt)); 
+    this._elementImg.src = this._card.link;
+    this._elementImg.alt =this._card.name;
 
     //отрисовываем лайк, если он был
     if (
@@ -53,27 +49,34 @@ export default class Card {
         return item._id === this._userId;
       })
     ) {
-      elementLike.classList.add("like_active");
+      this._elementLike.classList.add("like_active");
     }
   
     //проверяем рисовать ли корзину
     if (this._userId == this._card.owner._id) {
-      elementDrop.classList.add('element__button_remove_active');
-      elementDrop.addEventListener("click", (evt) => {
+      this._elementDrop.classList.add('element__button_remove_active');
+    }  
+  }
+
+  _setEventListeners() {
+    this._elementLike.addEventListener("click", (evt)=> this._toggleLike(evt)); 
+    this._elementImg.addEventListener("click", () => {
+      this._handleCardClick(this._card.link, this._card.name);
+    });
+    if (this._userId == this._card.owner._id) {
+      this._elementDrop.addEventListener("click", (evt) => {
         this._handleDelElement(this._card._id)
           .then(() => evt.target.closest(".element").remove())
           .catch((err) => {
             console.error(err);
           });
       });
-    } /*else {
-      elementDrop.style.display = "none";
-    }*/
-  
-    elementImg.addEventListener("click", () => {
-      this._handleCardClick(this._card.link, this._card.name);
-    });
-  
-    return cardElement;
+    }
+  }
+
+  generate() {  
+    this._createCard();
+    this._setEventListeners();
+    return this._cardElement;
   }
 }

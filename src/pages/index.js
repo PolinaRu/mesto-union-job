@@ -5,7 +5,7 @@ import { set, buttonEditAvatar, profile, avatarLink, avatarForm,
    profileAvatar, profileTitle, profileSubtitle, profileTitleNew, profileSubtitleNew, 
    popupElementName, newElementTitle, newElementLink,
    imagePopupImage, popupImage, subtitlePopupImage, 
-   elements, popups, elementTemplate } from '../utils/utils.js';
+   elements, elementTemplate } from '../utils/constants.js';
 import Api from '../components/Api.js';
 import UserInfo from '../components/UserInfo';
 import PopupWithForm from '../components/PopupWithForm';
@@ -31,12 +31,16 @@ const popupImg = new PopupWithImage(popupImage, imagePopupImage, subtitlePopupIm
  
 const cardList = new Section({
   data: [],
-  renderer: (item) => {
-    const card = new Card(item, profile.id, popupImg.open.bind(popupImg), api.putLike.bind(api), api.unputLike.bind(api), api.deleteMyElement.bind(api), elementTemplate);
-    const cardElement = card.generate();
-    cardList.setItem(cardElement);
+  renderer: (item) => {    
+    cardList.setItem(createCard(item));
   }
 }, elements);
+
+function createCard(item) {
+  const card = new Card(item, profile.id, popupImg.open.bind(popupImg), api.putLike.bind(api), api.unputLike.bind(api), api.deleteMyElement.bind(api), elementTemplate);
+  const cardElement = card.generate();
+  return cardElement;
+}
 
 //включаем кнопки закрытия
 popupAvatar.setEventListeners();
@@ -64,15 +68,12 @@ function renderLoading (isLoading, button, buttonText = 'Сохранить', lo
     button.textContent = buttonText;
   }
 }
-function handleSubmit (request, evt, loadingText = 'Сохранение...') {
+function handleSubmit (request, {data}, evt, loadingText = 'Сохранение...') {
   evt.preventDefault();
   const submitButton = evt.submitter;
   const initialText = submitButton.textContent;
   renderLoading(true, submitButton, initialText, loadingText);
-  request()
-  .then(() => {
-    evt.target.reset();
-  })
+  request({data})
   .catch((err) => {
     console.error(`Ошибка: ${err}`);
   })
@@ -81,14 +82,14 @@ function handleSubmit (request, evt, loadingText = 'Сохранение...') {
   });
 }
 
-function editAvatar(evt) {
-  function makeRequest() {
-    return api.editProfileAvatar(avatarLink.value).then((res) => {
+function editAvatar(evt, data) {
+  function makeRequest({data}) {
+    return api.editProfileAvatar(data.avatar__link).then((res) => {
       userInfo.setAvatar(res.avatar);
       popupAvatar.close();
     });
   }
-  handleSubmit(makeRequest, evt);
+  handleSubmit(makeRequest, {data}, evt);
 }
 
 buttonEditAvatar.addEventListener('click', function () {
@@ -102,32 +103,28 @@ function openPopupPorfile() {
   popupProfile.open();
 };
 
-function addNewElement(evt) {
-  function makeRequest() {
-    return api.postNewElement(newElementTitle.value, newElementLink.value).then((element) => {
-      const card = new Card(element, profile.id, popupImg.open.bind(popupImg), api.putLike.bind(api), api.unputLike.bind(api), api.deleteMyElement.bind(api), elementTemplate);
-      const cardElement = card.generate();
-      cardList.setItem(cardElement);
+function addNewElement(evt, data) {
+  function makeRequest({data}) {
+    return api.postNewElement(data.element__title, data.element__link).then((element) => {
+      cardList.prependItem(createCard(element));
       popupElement.close();
     });
   }
-  handleSubmit(makeRequest, evt);
+  handleSubmit(makeRequest, {data}, evt);
 }
 
-function saveProfile(evt) {
-  function makeRequest() {
-    return api.editProfile(profileTitleNew.value, profileSubtitleNew.value).then((res) => {
-      userInfo.setUserInfo(profileTitleNew.value, profileSubtitleNew.value);
+function saveProfile(evt, data) {
+  function makeRequest({data}) {
+    return api.editProfile(data.profile__title, data.profile__subtitle).then((res) => {
+      userInfo.setUserInfo(data.profile__title, data.profile__subtitle);
       popupProfile.close();
     });
   }
-  handleSubmit(makeRequest, evt);
+  handleSubmit(makeRequest, {data}, evt);
 }
 
 buttonEdit.addEventListener('click', openPopupPorfile);
 buttonAdd.addEventListener('click', () => {
-  newElementTitle.value = "";
-  newElementLink.value = "";
   popupElement.open();
 });
 

@@ -1,18 +1,20 @@
 export default class Popup{
   constructor(popupSelector) {
     this._popup = document.querySelector(popupSelector);
+    this._handleEscClose = this._handleEscClose.bind(this);
+    this._handleOverlay = this._handleOverlay.bind(this);
   }
 
   open() {
     this._popup.classList.add('popup_opened');
-    window.addEventListener('keydown', this._handleEscClose.bind(this));
-    window.addEventListener("mousedown", this._handleOverlay.bind(this));
+    window.addEventListener('keydown', this._handleEscClose);
+    window.addEventListener("mousedown", this._handleOverlay);
   }
 
   close() {
     this._popup.classList.remove('popup_opened');
-    window.removeEventListener('keydown', this._handleEscClose.bind(this)); 
-    window.removeEventListener("mousedown", this._handleOverlay.bind(this));//почему-то нормально не снимается?
+    window.removeEventListener('keydown', this._handleEscClose); 
+    window.removeEventListener("mousedown", this._handleOverlay);
   }
 
   _handleEscClose(evt) {
