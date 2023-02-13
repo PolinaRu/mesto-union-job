@@ -1,127 +1,220 @@
 <!DOCTYPE html>
 <html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Место</title>
+  </head>
 
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Место</title>
-</head>
-
-<body class="page">
-  <header class="header">
-    <img class="header__logo" alt="логотип" src="<%=require('./images/logo.svg')%>">
-  </header>
-  <main class="main">
-    <section class="profile">
-<button id="buttonEditAvatar" type="button" class="profile__avatar">
-  <img class="profile__avatar-edit" src="<%=require('./images/edit.svg')%>"
-       alt="изменить аватарку">
-  <img class="profile__avatar-img" alt="автарка" src="<%=require('./images/avatar.jpg')%>">
-</button>
-      <div id="profileId" class="profile__info">
-        <div class="profile__text">
-          <h1 class="profile__title">Жак-Ив Кусто</h1>
-          <button type="button" class="profile__button profile__button_making_edit"></button>
+  <body class="page">
+    <header class="header">
+      <img
+        class="header__logo"
+        alt="логотип"
+        src="<%=require('./images/logo.svg')%>"
+      />
+    </header>
+    <main class="main">
+      <section class="profile">
+        <button id="buttonEditAvatar" type="button" class="profile__avatar">
+          <img
+            class="profile__avatar-edit"
+            src="<%=require('./images/edit.svg')%>"
+            alt="изменить аватарку"
+          />
+          <img class="profile__avatar-img" alt="автарка" />
+        </button>
+        <div id="profileId" class="profile__info">
+          <div class="profile__text">
+            <h1 class="profile__title"></h1>
+            <button
+              type="button"
+              class="profile__button profile__button_making_edit"
+            ></button>
+          </div>
+          <p class="profile__subtitle"></p>
         </div>
-        <p class="profile__subtitle">Исследователь океана</p>
-      </div>
-      <button type="button" class="profile__button profile__button_making_add"></button>
-    </section>
-    <section class="elements">
-      <ul class="elements__list">
+        <button
+          type="button"
+          class="profile__button profile__button_making_add"
+        ></button>
+      </section>
+      <section class="elements">
+        <ul class="elements__list"></ul>
+      </section>
+    </main>
+    <footer class="footer">
+      <p class="footer__copyright">&copy; 2023. GudLub & PolinaRu</p>
+    </footer>
 
-      </ul>
-    </section>
-  </main>
-  <footer class="footer">
-    <p class="footer__copyright">&copy; 2022. GudLub</p>
-  </footer>
-
-  <div class="popup popup-profile">
-    <div class="popup__window">
-      <h3 class="popup__name">Редактировать профиль</h3>
-      <button type="button" class="popup__button popup__button_making_exit"></button>
-      <form name="profileEdit" class="popup__container" novalidate>
-        <fieldset class="popup__title">
-          <input class="popup__input" type="text" name="profile__title" id="profile-title" placeholder="Имя" required
-            value="" minlength="2" maxlength="40" pattern="^[a-zA-Zа-яА-яёЁ\s\-]+$"
-            data-error-message="Поле должно содержать только латинские буквы, кириллические буквы, знаки дефиса и пробелы.">
-          <span class="popup__input-error profile-title-error"></span>
-        </fieldset>
-        <fieldset class="popup__subtitle">
-          <input class="popup__input" type="text" name="profile__subtitle" id="profile-subtitle" placeholder="Профессия"
-            required value="" minlength="2" maxlength="200" pattern="^[a-zA-Zа-яА-яёЁ\s\-]+$"
-            data-error-message="Поле должно содержать только латинские буквы, кириллические буквы, знаки дефиса и пробелы.">
-          <span class="popup__input-error profile-subtitle-error"></span>
-        </fieldset>
-        <button type="submit"
-          class="popup__button popup__button_making_save popup__button_making_save_profile">Сохранить</button>
-      </form>
-    </div>
-  </div>
-  <div id="newElementId" class="popup popup-element">
-    <div class="popup__window">
-      <h3 class="popup__name">Новое место</h3>
-      <button type="button" class="popup__button popup__button_making_exit"></button>
-      <form id="popupForm" name="elementEdit" class="popup__container" novalidate>
-        <fieldset class="popup__title">
-          <input class="popup__input" type="text" name="element__title" id="element-title" placeholder="Название"
-            required value="" minlength="2" maxlength="30" pattern="^[a-zA-Zа-яА-яёЁ\s\-]+$"
-            data-error-message="Поле должно содержать только латинские буквы, кириллические буквы, знаки дефиса и пробелы.">
-          <span class="popup__input-error element-title-error"></span>
-        </fieldset>
-        <fieldset class="popup__subtitle">
-          <input class="popup__input" type="url" name="element__link" id="element-link" placeholder="Ссылка на картинку"
-            required value="">
-          <span class="popup__input-error element-link-error"></span>
-        </fieldset>
-        <button type="submit" id="submitButton"
-          class="popup__button popup__button_making_save popup__button_making_save_image" disabled>Сохранить</button>
-      </form>
-    </div>
-  </div>
-  <div class="popup popup-image">
-    <div class="popup__window-image">
-      <button type="button" class="popup__bustton popup__button_making_exit popup__button_making_exit-img"></button>
-      <figure class="popup__figure">
-        <img class="popup__image" src="" alt="">
-        <figcaption class="popup__subtitle popup__image-subtitle"></figcaption>
-      </figure>
-    </div>
-  </div>
-  <div class="popup popup-avatar">
-    <div class="popup__window popup__window-avatar">
-              <h3 class="popup__name">Обновить аватар</h3>
-        <button type="button" class="popup__button popup__button_making_exit"></button>
-      <form id="avatarEditForm" name="avatarEdit" class="popup__container" novalidate>
-        <fieldset class="popup__subtitle">
-          <input
-                 type="url"
-                 class="popup__input"
-                 name="avatar__link"
-                 value=""
-                 placeholder="Ссылка на изображение"
-                 id="avatar-link"
-                 required>
-          <span class="popup__input-error avatar-link-error"></span>
-        </fieldset>
-          <button type="submit" id="avatarSubmit"
-           class="popup__button popup__button_making_save popup__button_making_save_avatar"  disabled>
+    <div class="popup popup-profile">
+      <div class="popup__window">
+        <h3 class="popup__name">Редактировать профиль</h3>
+        <button
+          type="button"
+          class="popup__button popup__button_making_exit"
+        ></button>
+        <form name="profileEdit" id="profileEdit" class="popup__container" novalidate>
+          <fieldset class="popup__title">
+            <input
+              class="popup__input"
+              type="text"
+              name="name"
+              id="profile-title"
+              placeholder="Имя"
+              required
+              value=""
+              minlength="2"
+              maxlength="40"
+              pattern="^[a-zA-Zа-яА-яёЁ\s\-]+$"
+              data-error-message="Поле должно содержать только латинские, кириллические буквы, знаки дефиса и пробелы."
+            />
+            <span class="popup__input-error profile-title-error"></span>
+          </fieldset>
+          <fieldset class="popup__subtitle">
+            <input
+              class="popup__input"
+              type="text"
+              name="about"
+              id="profile-subtitle"
+              placeholder="Профессия"
+              required
+              value=""
+              minlength="2"
+              maxlength="200"
+              pattern="^[a-zA-Zа-яА-яёЁ\s\-]+$"
+              data-error-message="Поле должно содержать только латинские, кириллические буквы, знаки дефиса и пробелы."
+            />
+            <span class="popup__input-error profile-subtitle-error"></span>
+          </fieldset>
+          <button
+            type="submit"
+            class="popup__button popup__button_making_save popup__button_making_save_profile"
+          >
             Сохранить
           </button>
-      </form>
-    </div>
-  </div>
-  <template id="elementTemplate">
-    <li class="element">
-      <img class="element__image popup__image" src="" alt="">
-      <button type="button" class="element__button element__button_remove"></button>
-      <h2 class="element__title"></h2>
-      <div class="element__like">
-        <button type="button" class="element__button element__button_like like"></button>
-        <p class="element__like-sum"></p>
+        </form>
       </div>
-    </li>
-  </template>
-</body>
+    </div>
+    <div id="newElementId" class="popup popup-element">
+      <div class="popup__window">
+        <h3 class="popup__name">Новое место</h3>
+        <button
+          type="button"
+          class="popup__button popup__button_making_exit"
+        ></button>
+        <form
+          id="popupForm"
+          name="elementEdit"
+          class="popup__container"
+          novalidate
+        >
+          <fieldset class="popup__title">
+            <input
+              class="popup__input"
+              type="text"
+              name="element__title"
+              id="element-title"
+              placeholder="Название"
+              required
+              value=""
+              minlength="2"
+              maxlength="30"
+              pattern="^[a-zA-Zа-яА-яёЁ\s\-]+$"
+              data-error-message="Поле должно содержать только латинские, кириллические буквы, знаки дефиса и пробелы."
+            />
+            <span class="popup__input-error element-title-error"></span>
+          </fieldset>
+          <fieldset class="popup__subtitle">
+            <input
+              class="popup__input"
+              type="url"
+              name="element__link"
+              id="element-link"
+              placeholder="Ссылка на картинку"
+              required
+              value=""
+            />
+            <span class="popup__input-error element-link-error"></span>
+          </fieldset>
+          <button
+            type="submit"
+            id="submitButton"
+            class="popup__button popup__button_making_save popup__button_making_save_image"
+            disabled
+          >
+            Сохранить
+          </button>
+        </form>
+      </div>
+    </div>
+    <div class="popup popup-image">
+      <div class="popup__window-image">
+        <button
+          type="button"
+          class="popup__bustton popup__button_making_exit popup__button_making_exit-img"
+        ></button>
+        <figure class="popup__figure">
+          <img class="popup__image" src="" alt="" />
+          <figcaption
+            class="popup__subtitle popup__image-subtitle"
+          ></figcaption>
+        </figure>
+      </div>
+    </div>
+    <div class="popup popup-avatar">
+      <div class="popup__window popup__window-avatar">
+        <h3 class="popup__name">Обновить аватар</h3>
+        <button
+          type="button"
+          class="popup__button popup__button_making_exit"
+        ></button>
+        <form
+          id="avatarEditForm"
+          name="avatarEdit"
+          class="popup__container"
+          novalidate
+        >
+          <fieldset class="popup__subtitle">
+            <input
+              type="url"
+              class="popup__input"
+              name="avatar__link"
+              value=""
+              placeholder="Ссылка на изображение"
+              id="avatar-link"
+              required
+            />
+            <span class="popup__input-error avatar-link-error"></span>
+          </fieldset>
+          <button
+            type="submit"
+            id="avatarSubmit"
+            class="popup__button popup__button_making_save popup__button_making_save_avatar"
+            disabled
+          >
+            Сохранить
+          </button>
+        </form>
+      </div>
+    </div>
+    <template id="elementTemplate">
+      <li class="element">
+        <img class="element__image popup__image" src="" alt="" />
+        <button
+          type="button"
+          class="element__button element__button_remove"
+        ></button>
+        <h2 class="element__title"></h2>
+        <div class="element__like">
+          <button
+            type="button"
+            class="element__button element__button_like like"
+          ></button>
+          <p class="element__like-sum"></p>
+        </div>
+      </li>
+    </template>
+  </body>
+</html>
